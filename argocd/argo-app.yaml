@@ -12,4 +12,6 @@ spec:
     path: argocd
     repoURL: https://github.com/olukotun-ts/udacity-k8s 
     targetRevision: HEAD
-  syncPolicy: {}
+  syncPolicy: 
+    automated: 
+      prune: true
