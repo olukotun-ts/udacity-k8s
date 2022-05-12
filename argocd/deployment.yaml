@@ -16,5 +16,5 @@ spec:
         app: python-helloworld
     spec:
       containers:
-      - image: pixelpotato/python-helloworld:v1.1.0 
+      - image: pixelpotato/python-helloworld:latest
         name: python-helloworld
