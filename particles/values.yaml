@@ -13,10 +13,10 @@ image:
         
 service:
   type: LoadBalancer
-  port: 80
+  port: 15000
   targetPort: 5000
 
 argocd:
-  path: gke/particles
+  path: particles
   repoURL: https://github.com/olukotun-ts/udacity-k8s
-  targetRevision: HEAD
+  targetRevision: gke
