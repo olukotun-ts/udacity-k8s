@@ -1,5 +1,6 @@
-namespace: particles-dev
+appName: particles
 appVersion: 1.0.0
+namespace: particles-dev
 configData:
   valueFile: values.yaml
 
