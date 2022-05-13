@@ -1,0 +1,55 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ .Values.namespace }}-deployment
+  namespace: {{ .Values.namespace }}
+  labels:
+    app: particles
+    version: {{ .Values.appVersion }}
+spec:
+  selector:
+    matchLabels:
+      app: particles
+      version: {{ .Values.appVersion }}
+  replicas: {{ .Values.replicaCount }}
+  template:
+    metadata:
+      labels:
+        app: particles
+        version: {{ .Values.appVersion }}
+    spec:
+      containers:
+      - name: particles
+        image: {{ .Values.image.name }}:{{ .Values.image.tag }}
+        imagePullPolicy: {{ .Values.image.pullPolicy }}
+        args:
+          - "--color=#F0F5FA"
+          - "--appVersion=1.0.0"
+          - "--showStats"
+          - "--clusterCount=50"
+          - "--particlesPerCluster=10"
+          - "--minMem=300"
+        env:
+        - name: MEM_LIMIT
+          valueFrom:
+            resourceFieldRef:
+              containerName: particles
+              divisor: 1Mi
+              resource: limits.memory
+        ports:
+        - containerPort: 5000
+          name: http
+          protocol: TCP
+        livenessProbe:
+          httpGet:
+            path: /health
+            port: http
+            scheme: HTTP
+          failureThreshold: 1
+        resources:
+          limits:
+            cpu: 100m
+            memory: 320Mi
+          requests:
+            cpu: 50m
+            memory: 64Mi

@@ -1,0 +1,21 @@
+namespace: particles-dev
+appVersion: 1.0.0
+configData:
+  valueFile: values.yaml
+
+replicaCount: 3
+
+image:
+  name: magneticio/particles
+  tag: 1.5.2
+  pullPolicy: IfNotPresent
+        
+service:
+  type: LoadBalancer
+  port: 80
+  targetPort: 5000
+
+argocd:
+  path: gke/particles
+  repoURL: https://github.com/olukotun-ts/udacity-k8s
+  targetRevision: HEAD

@@ -5,12 +5,12 @@ metadata:
     app: {{ .Values.image.name }}
     tag: {{ .Values.image.tag }}
   name: {{ .Values.image.name }}-svc
-  namespace: {{ .Values.namespace.name }}
+  namespace: {{ .Values.namespace }}
 spec:
   ports:
   - port: {{ .Values.service.port }}
     protocol: TCP
-    targetPort: 8111
+    targetPort: {{ .Values.service.targetPort }}
   selector:
     app: {{ .Values.image.name }}
     tag: {{ .Values.image.tag }}

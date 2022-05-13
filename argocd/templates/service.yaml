@@ -6,21 +6,13 @@ metadata:
     app.kubernetes.io/component: server
     app.kubernetes.io/name: argocd-server
     app.kubernetes.io/part-of: argocd
-  name: argocd-server-nodeport
-  namespace: argocd
+  name: argocd-server-{{ .Values.service.type }}
+  namespace: {{ .Values.namespace }}
 spec:
   ports:
-  - name: http
-    port: 80
-    protocol: TCP
-    targetPort: 8080
-    nodePort: 30007
-  - name: https
-    port: 443
-    protocol: TCP
-    targetPort: 8080
-    nodePort: 30008
+  - port: {{ .Values.service.port }}
+    targetPort: {{ .Values.service.targetPort }}
   selector:
     app.kubernetes.io/name: argocd-server
   sessionAffinity: None
-  type: NodePort
+  type: {{ .Values.service.type }}
