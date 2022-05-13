@@ -1,0 +1,21 @@
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: nginx-staging
+  namespace: argocd
+spec:
+  destination:
+    namespace: nginx-staging
+    server: https://kubernetes.default.svc
+  project: nginx
+  source:
+    helm:
+      valueFiles:
+      - values-staging.yaml
+    path: helm/nginx
+    repoURL: https://github.com/olukotun-ts/udacity-k8s 
+    targetRevision: HEAD
+  syncPolicy: 
+    automated: 
+      prune: true
+      
