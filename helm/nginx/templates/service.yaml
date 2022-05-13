@@ -4,7 +4,7 @@ metadata:
   labels:
     app: {{ .Values.image.name }}
     tag: {{ .Values.image.tag }}
-  name: {{ .Values.namespace.name }}-svc
+  name: {{ .Values.image.name }}-svc
   namespace: {{ .Values.namespace.name }}
 spec:
   ports:
