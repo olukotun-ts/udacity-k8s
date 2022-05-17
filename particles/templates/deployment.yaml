@@ -23,12 +23,12 @@ spec:
         image: {{ .Values.image.name }}:{{ .Values.image.tag }}
         imagePullPolicy: {{ .Values.image.pullPolicy }}
         args:
-          - "--color=#F0F5FA"
-          - "--appVersion=1.0.0"
-          - "--showStats"
-          - "--clusterCount=50"
-          - "--particlesPerCluster=10"
-          - "--minMem=300"
+          - --showStats
+          - --color={{ .Values.configData.color }}
+          - --appVersion={{ .Values.appVersion }}
+          - --clusterCount={{ .Values.configData.clusterCount }}
+          - --particlesPerCluster={{ .Values.configData.particlesPerCluster }}
+          - --minMem=300
         env:
         - name: MEM_LIMIT
           valueFrom:

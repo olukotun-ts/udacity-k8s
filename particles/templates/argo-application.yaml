@@ -1,7 +1,7 @@
 apiVersion: argoproj.io/v1alpha1
 kind: Application
 metadata:
-  name: {{ .Values.namespace }}
+  name: {{ .Values.namespace }}-argo-app
   namespace: argocd
 spec:
   destination:
@@ -12,8 +12,8 @@ spec:
     helm:
       valueFiles:
       - {{ .Values.configData.valueFile }}
-    path: {{ .Values.argocd.path }}
     repoURL: {{ .Values.argocd.repoURL }}
+    path: {{ .Values.argocd.path }}
     targetRevision: {{ .Values.argocd.targetRevision }}
   syncPolicy: 
     automated: 

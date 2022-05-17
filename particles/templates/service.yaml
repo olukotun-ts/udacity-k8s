@@ -3,7 +3,6 @@ kind: Service
 metadata:
   labels:
     app: {{ .Values.appName }}
-    tag: {{ .Values.image.tag }}
   name: {{ .Values.appName }}-svc
   namespace: {{ .Values.namespace }}
 spec:
@@ -13,5 +12,4 @@ spec:
     targetPort: {{ .Values.service.targetPort }}
   selector:
     app: {{ .Values.appName }}
-    tag: {{ .Values.image.tag }}
   type: {{ .Values.service.type }}

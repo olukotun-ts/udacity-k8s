@@ -1,8 +1,11 @@
 appName: particles
-appVersion: 1.0.0
+appVersion: 1.0.1
 namespace: particles-dev
 configData:
   valueFile: values.yaml
+  color: #00FF00
+  clusterCount: 1
+  particlesPerCluster: 5
 
 replicaCount: 3
 
@@ -13,10 +16,10 @@ image:
         
 service:
   type: LoadBalancer
-  port: 15000
+  port: 80
   targetPort: 5000
 
 argocd:
-  path: particles
   repoURL: https://github.com/olukotun-ts/udacity-k8s
+  path: particles
   targetRevision: gke
