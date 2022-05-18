@@ -35,7 +35,7 @@ jobs:
               .configData.particlesPerCluster = strenv(PPC)' particles/values.yaml
 
             export VERSION=0.0.$CIRCLE_BUILD_NUM
-            yq --inplace '.version = strenv(VERSION)'
+            yq --inplace '.version = strenv(VERSION)' particles/Chart.yaml
       - run:
           name: Install Helm
           command: |
