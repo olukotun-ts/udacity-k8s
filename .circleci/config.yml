@@ -48,7 +48,8 @@ jobs:
       - run:
           name: Update chart repo index
           command: |
-            helm repo index charts --merge charts/index.yaml
+            helm repo index charts --url https://olukotun-ts.github.io/udacity-k8s/charts \
+              --merge charts/index.yaml
       - when:
           condition: <<pipeline.parameters.dry-run>>
           steps:
