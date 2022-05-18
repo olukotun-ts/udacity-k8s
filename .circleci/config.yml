@@ -24,7 +24,8 @@ jobs:
             # Update configData.particlesPerCluster
             wget https://github.com/mikefarah/yq/releases/download/v4.20.2/yq_linux_amd64.tar.gz -O yq.tar.gz
             tar -xf yq.tar.gz
-            sudo mv yq_linux_amd64
+            sudo mv yq_linux_amd64 /usr/bin/yq
+            yq -V
 
             # command -v yq || wget https://github.com/mikefarah/yq/releases/download/v4.20.2/yq_linux_amd64.tar.gz -O - | \
             #   tar xz && sudo mv yq_linux_amd64 /usr/bin/yq
