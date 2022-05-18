@@ -30,7 +30,12 @@ jobs:
           name: Update manifests
           command: |
             export PPC=<<pipeline.parameters.particles-per-cluster>>
-            yq --inplace '.configData.particlesPerCluster = strenv(PPC)' particles/values.yaml
+            yq --inplace '
+              .appVersion = strenv($CIRCLE_BUILD_NUM) |
+              .configData.particlesPerCluster = strenv(PPC)' particles/values.yaml
+
+            export VERSION=0.0.$CIRCLE_BUILD_NUM
+            yq --inplace '.version = strenv(VERSION)'
       - run:
           name: Install Helm
           command: |
