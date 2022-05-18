@@ -19,28 +19,33 @@ jobs:
     steps:
       - checkout
       - run:
-          name: Update manifests
+          name: Install yq
           command: |
-            # Update configData.particlesPerCluster
             wget https://github.com/mikefarah/yq/releases/download/v4.20.2/yq_linux_amd64.tar.gz -O yq.tar.gz
             tar -xf yq.tar.gz
             sudo mv yq_linux_amd64 /usr/bin/yq
             yq -V
+      - run:
+          name: Update manifests
+          command: |
+            Update configData.particlesPerCluster
+            export PPC=<<pipeline.parameters.particlesPerCluster>>
+            yq --inplace '.configData.particlesPerCluster = strenv(PPC)' particles/values.yaml
 
-            # command -v yq || wget https://github.com/mikefarah/yq/releases/download/v4.20.2/yq_linux_amd64.tar.gz -O - | \
-            #   tar xz && sudo mv yq_linux_amd64 /usr/bin/yq
-            # export PPC=<<pipeline.parameters.particlesPerCluster>>
-            # yq --inplace '.configData.particlesPerCluster = strenv(PPC)' particles/values.yaml
-
-            # git config user.email "${CIRCLE_USERNAME}@${CIRCLE_PROJECT_USERNAME}.bot"
-            # git config user.name "${CIRCLE_USERNAME}"
-            # git commit -am 'Update manifests'
-            # git push -u origin ghe-pages
+            git config user.email "${CIRCLE_USERNAME}@${CIRCLE_PROJECT_USERNAME}.bot"
+            git config user.name "${CIRCLE_USERNAME}"
+            git commit -am 'Update manifests'
+            git push -u origin ghe-pages
   package-chart:
     docker:
       - image: cimg/base:edge
     steps:
       - checkout
+      - run:
+          name: Install dependencies
+          command: |
+            curl https://raw.githubusercontent.com/helm/helm/main/scripts/get-helm-3 | bash
+            helm version
       - run:
           name: Package and deliver chart
           command: |
@@ -55,6 +60,11 @@ jobs:
       - image: cimg/base:edge
     steps:
       - checkout
+      - run:
+          name: Install dependencies
+          command: |
+            curl https://raw.githubusercontent.com/helm/helm/main/scripts/get-helm-3 | bash
+            helm version
       - run:
           name: Update chart repo index
           command: |
