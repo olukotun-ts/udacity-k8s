@@ -17,6 +17,8 @@ jobs:
     # vs. previous commit https://app.circleci.com/pipelines/github/olukotun-ts/udacity-k8s/2/workflows/32d961f9-5044-4b94-a4c6-c5f349ee6367/jobs/2
     # working_directory: particles 
     steps:
+      - add_ssh_keys:
+          fingerprints: 1b:e6:e3:1e:a2:ce:3d:22:92:88:32:9c:e6:71:ce:57
       - checkout
       - run:
           name: Install yq
