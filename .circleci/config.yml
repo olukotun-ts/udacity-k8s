@@ -41,6 +41,8 @@ jobs:
     docker:
       - image: cimg/base:edge
     steps:
+      - add_ssh_keys:
+          fingerprints: 1b:e6:e3:1e:a2:ce:3d:22:92:88:32:9c:e6:71:ce:57
       - checkout
       - run:
           name: Install dependencies
@@ -60,6 +62,8 @@ jobs:
     docker:
       - image: cimg/base:edge
     steps:
+      - add_ssh_keys:
+          fingerprints: 1b:e6:e3:1e:a2:ce:3d:22:92:88:32:9c:e6:71:ce:57
       - checkout
       - run:
           name: Install dependencies
