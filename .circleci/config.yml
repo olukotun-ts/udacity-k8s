@@ -5,7 +5,10 @@ orbs:
   gcp-gcr: circleci/gcp-gcr@0.15.0
 
 parameters:
-  particlesPerCluster:
+  dry-run:
+    type: boolean
+    default: true
+  particles-per-cluster:
     type: integer
     default: 5
 
@@ -30,13 +33,19 @@ jobs:
       - run:
           name: Update manifests
           command: |
-            export PPC=<<pipeline.parameters.particlesPerCluster>>
+            export PPC=<<pipeline.parameters.particles-per-cluster>>
             yq --inplace '.configData.particlesPerCluster = strenv(PPC)' particles/values.yaml
-
-            git config user.email "${CIRCLE_USERNAME}@${CIRCLE_PROJECT_USERNAME}.bot"
-            git config user.name "${CIRCLE_USERNAME}"
-            git commit -am 'Update manifests'
-            git push -u origin ghe-pages
+      - unless:
+          condition: <<pipeline.parameters.dry-run>>
+          steps:
+            - run: 
+                name: Persist updates
+                command: |
+                  echo "my custom checkout"
+                  git config user.email "${CIRCLE_USERNAME}@${CIRCLE_PROJECT_USERNAME}.bot"
+                  git config user.name "${CIRCLE_USERNAME}"
+                  git commit -am 'Update manifests'
+                  git push -u origin ghe-pages
   package-chart:
     docker:
       - image: cimg/base:edge
@@ -53,11 +62,17 @@ jobs:
           name: Package and deliver chart
           command: |
             helm package particles --destination charts
-
-            git config user.email "${CIRCLE_USERNAME}@${CIRCLE_PROJECT_USERNAME}.bot"
-            git config user.name "${CIRCLE_USERNAME}"
-            git commit -am 'Package chart'
-            git push -u origin ghe-pages
+      - unless:
+          condition: <<pipeline.parameters.dry-run>>
+          steps:
+            - run: 
+                name: Persist updates
+                command: |
+                  echo "my custom checkout"
+                  git config user.email "${CIRCLE_USERNAME}@${CIRCLE_PROJECT_USERNAME}.bot"
+                  git config user.name "${CIRCLE_USERNAME}"
+                  git commit -am 'Package chart'
+                  git push -u origin ghe-pages
   update-index:
     docker:
       - image: cimg/base:edge
@@ -74,11 +89,17 @@ jobs:
           name: Update chart repo index
           command: |
             helm repo index charts --merge charts/index.yaml
-
-            git config user.email "${CIRCLE_USERNAME}@${CIRCLE_PROJECT_USERNAME}.bot"
-            git config user.name "${CIRCLE_USERNAME}"
-            git commit -am 'Package chart'
-            git push -u origin ghe-pages
+      - unless:
+          condition: <<pipeline.parameters.dry-run>>
+          steps:
+            - run: 
+                name: Persist updates
+                command: |
+                  echo "my custom checkout"
+                  git config user.email "${CIRCLE_USERNAME}@${CIRCLE_PROJECT_USERNAME}.bot"
+                  git config user.name "${CIRCLE_USERNAME}"
+                  git commit -am 'Update index'
+                  git push -u origin ghe-pages
 
 workflows:
   version: 2
