@@ -28,7 +28,6 @@ jobs:
       - run:
           name: Update manifests
           command: |
-            Update configData.particlesPerCluster
             export PPC=<<pipeline.parameters.particlesPerCluster>>
             yq --inplace '.configData.particlesPerCluster = strenv(PPC)' particles/values.yaml
 
