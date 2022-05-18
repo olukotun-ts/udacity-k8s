@@ -1,0 +1,55 @@
+version: 2.1
+
+orbs:
+  kubernetes: circleci/kubernetes@0.11.0
+  gcp-gcr: circleci/gcp-gcr@0.15.0
+
+parameters:
+  particlesPerCluster:
+    type: integer
+    default: 5
+
+jobs:
+  update-manifests:
+    docker:
+      - image: cimg/edge
+    steps:
+      - checkout
+      - run:
+          name: Update manifests
+          working-directory: particles
+          command: |
+            # Update configData.particlesPerCluster
+            command -v yq || wget https://github.com/mikefarah/yq/releases/download/v4.20.2/yq_linux_amd64.tar.gz -O - | \
+              tar xz && sudo mv yq_linux_amd64 /usr/bin/yq
+            export PPC=<<pipeline.parameters.particlesPerCluster>>
+            yq --inplace '.configData.particlesPerCluster = strenv(PPC)' values.yaml
+
+            git config user.email "${CIRCLE_USERNAME}@${CIRCLE_PROJECT_USERNAME}.bot"
+            git config user.name "${CIRCLE_USERNAME}"
+            git commit -am 'Update manifests'
+            git push -u origin ghe-pages
+  package-chart:
+    docker:
+      - image: cimg/edge
+    steps:
+      - checkout
+      - run:
+          name: Package and deliver chart
+          command: |
+            helm package particles --destination charts
+
+            git config user.email "${CIRCLE_USERNAME}@${CIRCLE_PROJECT_USERNAME}.bot"
+            git config user.name "${CIRCLE_USERNAME}"
+            git commit -am 'Package chart'
+            git push -u origin ghe-pages
+
+workflows:
+  version: 2
+  default:
+    jobs:
+      - update-manifests
+      - package-chart:
+          requires:
+            - update-manifests
+            
