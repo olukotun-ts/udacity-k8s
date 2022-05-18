@@ -2,10 +2,10 @@ apiVersion: v1
 entries:
   particles:
   - apiVersion: v1
-    created: "2022-05-17T11:30:12.271471-07:00"
+    created: "2022-05-18T10:57:20.434926-07:00"
     digest: c128f3e2b21b03490ca8b92f7611e07e7f706002f2b9192d7e85a2f9c50ffaba
     name: particles
     urls:
-    - particles-1.0.0.tgz
+    - https://olukotun-ts.github.io/udacity-k8s/charts/particles-1.0.0.tgz
     version: 1.0.0
-generated: "2022-05-17T11:30:12.269813-07:00"
+generated: "2022-05-18T10:57:20.429266-07:00"
