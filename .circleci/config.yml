@@ -1,9 +1,5 @@
 version: 2.1
 
-orbs:
-  kubernetes: circleci/kubernetes@0.11.0
-  gcp-gcr: circleci/gcp-gcr@0.15.0
-
 parameters:
   dry-run:
     type: boolean
@@ -13,7 +9,7 @@ parameters:
     default: 5
 
 jobs:
-  update-manifests:
+  update-repo:
     docker:
       - image: cimg/base:edge
     # Is this causing checkout to fail? https://app.circleci.com/pipelines/github/olukotun-ts/udacity-k8s/3/workflows/806d08c9-cb4e-4485-8f74-d1c91edab441/jobs/4?invite=true#step-101-73
@@ -35,67 +31,15 @@ jobs:
           command: |
             export PPC=<<pipeline.parameters.particles-per-cluster>>
             yq --inplace '.configData.particlesPerCluster = strenv(PPC)' particles/values.yaml
-      - when:
-          condition: <<pipeline.parameters.dry-run>>
-          steps:
-            - store_artifacts:
-                path: particles/values.yaml
-      - unless:
-          condition: <<pipeline.parameters.dry-run>>
-          steps:
-            - run: 
-                name: Persist updates
-                command: |
-                  echo "my custom checkout"
-                  git config user.email "${CIRCLE_USERNAME}@${CIRCLE_PROJECT_USERNAME}.bot"
-                  git config user.name "${CIRCLE_USERNAME}"
-                  git commit -am 'Update manifests'
-                  git push -u origin ghe-pages
-  # Include index update
-  package-chart:
-    docker:
-      - image: cimg/base:edge
-    steps:
-      - add_ssh_keys:
-          fingerprints: 1b:e6:e3:1e:a2:ce:3d:22:92:88:32:9c:e6:71:ce:57
-      - checkout
       - run:
-          name: Install dependencies
+          name: Install Helm
           command: |
             curl https://raw.githubusercontent.com/helm/helm/main/scripts/get-helm-3 | bash
             helm version
       - run:
-          name: Package and deliver chart
+          name: Package chart
           command: |
             helm package particles --destination charts
-      - when:
-          condition: <<pipeline.parameters.dry-run>>
-          steps:
-            - store_artifacts:
-                path: charts
-      - unless:
-          condition: <<pipeline.parameters.dry-run>>
-          steps:
-            - run: 
-                name: Persist updates
-                command: |
-                  echo "my custom checkout"
-                  git config user.email "${CIRCLE_USERNAME}@${CIRCLE_PROJECT_USERNAME}.bot"
-                  git config user.name "${CIRCLE_USERNAME}"
-                  git commit -am 'Package chart'
-                  git push -u origin ghe-pages
-  update-index:
-    docker:
-      - image: cimg/base:edge
-    steps:
-      - add_ssh_keys:
-          fingerprints: 1b:e6:e3:1e:a2:ce:3d:22:92:88:32:9c:e6:71:ce:57
-      - checkout
-      - run:
-          name: Install dependencies
-          command: |
-            curl https://raw.githubusercontent.com/helm/helm/main/scripts/get-helm-3 | bash
-            helm version
       - run:
           name: Update chart repo index
           command: |
@@ -104,28 +48,22 @@ jobs:
           condition: <<pipeline.parameters.dry-run>>
           steps:
             - store_artifacts:
-                path: charts/index.yaml
+                path: particles/values.yaml
+            - store_artifacts:
+                path: charts
       - unless:
           condition: <<pipeline.parameters.dry-run>>
           steps:
             - run: 
                 name: Persist updates
                 command: |
-                  echo "my custom checkout"
                   git config user.email "${CIRCLE_USERNAME}@${CIRCLE_PROJECT_USERNAME}.bot"
                   git config user.name "${CIRCLE_USERNAME}"
-                  git commit -am 'Update index'
+                  git commit -am 'Update manifests'
                   git push -u origin ghe-pages
 
 workflows:
   version: 2
   default:
     jobs:
-      - update-manifests
-      - package-chart:
-          requires:
-            - update-manifests
-      - update-index:
-          requires:
-            - package-chart
-            
+      - update-repo
