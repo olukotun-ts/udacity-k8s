@@ -13,11 +13,11 @@ jobs:
   update-manifests:
     docker:
       - image: cimg/base:edge
+    working_directory: particles
     steps:
       - checkout
       - run:
           name: Update manifests
-          working-directory: particles
           command: |
             # Update configData.particlesPerCluster
             command -v yq || wget https://github.com/mikefarah/yq/releases/download/v4.20.2/yq_linux_amd64.tar.gz -O - | \
@@ -43,6 +43,20 @@ jobs:
             git config user.name "${CIRCLE_USERNAME}"
             git commit -am 'Package chart'
             git push -u origin ghe-pages
+  update-index:
+    docker:
+      - image: cimg/base:edge
+    steps:
+      - checkout
+      - run:
+          name: Update chart repo index
+          command: |
+            helm repo index charts --merge charts/index.yaml
+
+            git config user.email "${CIRCLE_USERNAME}@${CIRCLE_PROJECT_USERNAME}.bot"
+            git config user.name "${CIRCLE_USERNAME}"
+            git commit -am 'Package chart'
+            git push -u origin ghe-pages
 
 workflows:
   version: 2
@@ -52,4 +66,7 @@ workflows:
       - package-chart:
           requires:
             - update-manifests
+      - update-index:
+          requires:
+            - package-chart
             
