@@ -5,7 +5,7 @@ configData:
   valueFile: values.yaml
   color: #00FF00
   clusterCount: 1
-  particlesPerCluster: "12"
+  particlesPerCluster: "5"
 replicaCount: 3
 image:
   name: magneticio/particles
