@@ -22,9 +22,10 @@ jobs:
       - run:
           name: Install yq
           command: |
-            wget https://github.com/mikefarah/yq/releases/download/v4.20.2/yq_linux_amd64.tar.gz -O yq.tar.gz
-            tar -xf yq.tar.gz
-            sudo mv yq_linux_amd64 /usr/bin/yq
+            # wget https://github.com/mikefarah/yq/releases/download/v4.20.2/yq_linux_amd64.tar.gz -O yq.tar.gz
+            # tar -xf yq.tar.gz
+            # sudo mv yq_linux_amd64 /usr/bin/yq
+            apt install yq -y
             yq -V
       - run:
           name: Update manifests
