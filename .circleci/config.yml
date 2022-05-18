@@ -13,7 +13,9 @@ jobs:
   update-manifests:
     docker:
       - image: cimg/base:edge
-    working_directory: particles
+    # Is this causing checkout to fail? https://app.circleci.com/pipelines/github/olukotun-ts/udacity-k8s/3/workflows/806d08c9-cb4e-4485-8f74-d1c91edab441/jobs/4?invite=true#step-101-73
+    # vs. previous commit https://app.circleci.com/pipelines/github/olukotun-ts/udacity-k8s/2/workflows/32d961f9-5044-4b94-a4c6-c5f349ee6367/jobs/2
+    # working_directory: particles 
     steps:
       - checkout
       - run:
@@ -23,7 +25,7 @@ jobs:
             command -v yq || wget https://github.com/mikefarah/yq/releases/download/v4.20.2/yq_linux_amd64.tar.gz -O - | \
               tar xz && sudo mv yq_linux_amd64 /usr/bin/yq
             export PPC=<<pipeline.parameters.particlesPerCluster>>
-            yq --inplace '.configData.particlesPerCluster = strenv(PPC)' values.yaml
+            yq --inplace '.configData.particlesPerCluster = strenv(PPC)' particles/values.yaml
 
             git config user.email "${CIRCLE_USERNAME}@${CIRCLE_PROJECT_USERNAME}.bot"
             git config user.name "${CIRCLE_USERNAME}"
