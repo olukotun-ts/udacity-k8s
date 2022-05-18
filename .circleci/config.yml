@@ -35,6 +35,11 @@ jobs:
           command: |
             export PPC=<<pipeline.parameters.particles-per-cluster>>
             yq --inplace '.configData.particlesPerCluster = strenv(PPC)' particles/values.yaml
+      - when:
+          condition: <<pipeline.parameters.dry-run>>
+          steps:
+            - store_artifacts:
+                path: particles/values.yaml
       - unless:
           condition: <<pipeline.parameters.dry-run>>
           steps:
@@ -46,6 +51,7 @@ jobs:
                   git config user.name "${CIRCLE_USERNAME}"
                   git commit -am 'Update manifests'
                   git push -u origin ghe-pages
+  # Include index update
   package-chart:
     docker:
       - image: cimg/base:edge
@@ -62,6 +68,11 @@ jobs:
           name: Package and deliver chart
           command: |
             helm package particles --destination charts
+      - when:
+          condition: <<pipeline.parameters.dry-run>>
+          steps:
+            - store_artifacts:
+                path: charts
       - unless:
           condition: <<pipeline.parameters.dry-run>>
           steps:
@@ -89,6 +100,11 @@ jobs:
           name: Update chart repo index
           command: |
             helm repo index charts --merge charts/index.yaml
+      - when:
+          condition: <<pipeline.parameters.dry-run>>
+          steps:
+            - store_artifacts:
+                path: charts/index.yaml
       - unless:
           condition: <<pipeline.parameters.dry-run>>
           steps:
