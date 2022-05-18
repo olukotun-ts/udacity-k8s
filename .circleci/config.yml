@@ -22,15 +22,19 @@ jobs:
           name: Update manifests
           command: |
             # Update configData.particlesPerCluster
-            command -v yq || wget https://github.com/mikefarah/yq/releases/download/v4.20.2/yq_linux_amd64.tar.gz -O - | \
-              tar xz && sudo mv yq_linux_amd64 /usr/bin/yq
-            export PPC=<<pipeline.parameters.particlesPerCluster>>
-            yq --inplace '.configData.particlesPerCluster = strenv(PPC)' particles/values.yaml
+            wget https://github.com/mikefarah/yq/releases/download/v4.20.2/yq_linux_amd64.tar.gz -O yq.tar.gz
+            tar -xf yq.tar.gz
+            sudo mv yq_linux_amd64
 
-            git config user.email "${CIRCLE_USERNAME}@${CIRCLE_PROJECT_USERNAME}.bot"
-            git config user.name "${CIRCLE_USERNAME}"
-            git commit -am 'Update manifests'
-            git push -u origin ghe-pages
+            # command -v yq || wget https://github.com/mikefarah/yq/releases/download/v4.20.2/yq_linux_amd64.tar.gz -O - | \
+            #   tar xz && sudo mv yq_linux_amd64 /usr/bin/yq
+            # export PPC=<<pipeline.parameters.particlesPerCluster>>
+            # yq --inplace '.configData.particlesPerCluster = strenv(PPC)' particles/values.yaml
+
+            # git config user.email "${CIRCLE_USERNAME}@${CIRCLE_PROJECT_USERNAME}.bot"
+            # git config user.name "${CIRCLE_USERNAME}"
+            # git commit -am 'Update manifests'
+            # git push -u origin ghe-pages
   package-chart:
     docker:
       - image: cimg/base:edge
