@@ -65,7 +65,7 @@ jobs:
                 command: |
                   git config user.email "${CIRCLE_USERNAME}@${CIRCLE_PROJECT_USERNAME}.bot"
                   git config user.name "${CIRCLE_USERNAME}"
-                  git commit -am 'Update manifests from CircleCI build $CIRCLE_BUILD_NUM'
+                  git commit -am 'Update manifests from CircleCI build ${CIRCLE_BUILD_NUM}'
                   git push -u origin ghe-pages
 
 workflows:
