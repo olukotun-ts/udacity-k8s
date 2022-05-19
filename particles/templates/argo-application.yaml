@@ -15,7 +15,7 @@ spec:
     repoURL: {{ .Values.argocd.repoURL }}
     path: {{ .Values.argocd.path }}
     targetRevision: {{ .Values.argocd.targetRevision }}
-  syncPolicy: 
-    automated: 
-      prune: true
-      
+  syncPolicy: {}
+  # syncPolicy: 
+  #   automated: 
+  #     prune: true

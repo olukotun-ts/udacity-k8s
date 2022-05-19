@@ -18,4 +18,4 @@ service:
 argocd:
   repoURL: https://github.com/olukotun-ts/udacity-k8s
   path: particles
-  targetRevision: gke
+  targetRevision: ghe-pages
