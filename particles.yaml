@@ -101,3 +101,106 @@ spec:
   # syncPolicy: 
   #   automated: 
   #     prune: true
+---
+# Source: particles/templates/namespace.yaml
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: particles-dev
+---
+# Source: particles/templates/service.yaml
+apiVersion: v1
+kind: Service
+metadata:
+  labels:
+    app: particles
+  name: particles-svc
+  namespace: particles-dev
+spec:
+  ports:
+  - port: 80
+    protocol: TCP
+    targetPort: 5000
+  selector:
+    app: particles
+  type: LoadBalancer
+---
+# Source: particles/templates/deployment.yaml
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: particles-dev-deployment
+  namespace: particles-dev
+  labels:
+    app: particles
+    version: 0.1.0
+spec:
+  selector:
+    matchLabels:
+      app: particles
+      version: 0.1.0
+  replicas: 3
+  template:
+    metadata:
+      labels:
+        app: particles
+        version: 0.1.0
+    spec:
+      containers:
+      - name: particles
+        image: magneticio/particles:1.5.2
+        imagePullPolicy: IfNotPresent
+        args:
+          - --showStats
+          - --color=#00FF00
+          - --appVersion=
+          - --clusterCount=1
+          - --particlesPerCluster=5
+          - --minMem=300
+        env:
+        - name: MEM_LIMIT
+          valueFrom:
+            resourceFieldRef:
+              containerName: particles
+              divisor: 1Mi
+              resource: limits.memory
+        ports:
+        - containerPort: 5000
+          name: http
+          protocol: TCP
+        livenessProbe:
+          httpGet:
+            path: /health
+            port: http
+            scheme: HTTP
+          failureThreshold: 1
+        resources:
+          limits:
+            cpu: 100m
+            memory: 320Mi
+          requests:
+            cpu: 50m
+            memory: 64Mi
+---
+# Source: particles/templates/argo-application.yaml
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: particles-dev-argo-app
+  namespace: argocd
+spec:
+  destination:
+    namespace: particles-dev
+    server: https://kubernetes.default.svc
+  project: default
+  source:
+    helm:
+      valueFiles:
+      - values.yaml
+    repoURL: https://github.com/olukotun-ts/udacity-k8s
+    path: particles
+    targetRevision: ghe-pages
+  syncPolicy: {}
+  # syncPolicy: 
+  #   automated: 
+  #     prune: true
