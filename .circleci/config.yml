@@ -46,6 +46,9 @@ jobs:
           command: |
             helm package particles --destination charts
       - run:
+          name: Populate templates for debugging
+          command: helm template --debug particles >> particles.yaml
+      - run:
           name: Update chart repo index
           command: |
             helm repo index charts --url https://olukotun-ts.github.io/udacity-k8s/charts \
@@ -57,6 +60,8 @@ jobs:
                 path: particles/values.yaml
             - store_artifacts:
                 path: charts
+            - store_artifacts:
+                path: particles.yaml
       - unless:
           condition: <<pipeline.parameters.dry-run>>
           steps:

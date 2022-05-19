@@ -1,9 +1,9 @@
 appName: particles
-appVersion: ""
+appVersion: 1.0.2
 namespace: particles-dev
 configData:
   valueFile: values.yaml
-  color: #00FF00
+  color: "#00FF00"
   clusterCount: 1
   particlesPerCluster: "5"
 replicaCount: 3
