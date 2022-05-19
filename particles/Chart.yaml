@@ -1,3 +1,7 @@
 apiVersion: v1
 name: particles
+<<<<<<< HEAD
 version: 0.0.48
+=======
+version: 0.1.0
+>>>>>>> Use chart version to tag releases instead of appVersion

@@ -5,18 +5,18 @@ metadata:
   namespace: {{ .Values.namespace }}
   labels:
     app: particles
-    version: {{ .Values.appVersion }}
+    version: {{ .Chart.version }}
 spec:
   selector:
     matchLabels:
       app: particles
-      version: {{ .Values.appVersion }}
+      version: {{ .Chart.version }}
   replicas: {{ .Values.replicaCount }}
   template:
     metadata:
       labels:
         app: particles
-        version: {{ .Values.appVersion }}
+        version: {{ .Chart.version }}
     spec:
       containers:
       - name: particles

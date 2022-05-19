@@ -34,8 +34,8 @@ jobs:
               .appVersion = strenv($CIRCLE_BUILD_NUM) |
               .configData.particlesPerCluster = strenv(PPC)' particles/values.yaml
 
-            export VERSION=0.0.$CIRCLE_BUILD_NUM
-            yq --inplace '.version = strenv(VERSION)' particles/Chart.yaml
+            # export VERSION=0.0.$CIRCLE_BUILD_NUM
+            # yq --inplace '.version = strenv(VERSION)' particles/Chart.yaml
       - run:
           name: Install Helm
           command: |
