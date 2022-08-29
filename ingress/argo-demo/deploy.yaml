@@ -1,0 +1,27 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: argo-demo
+  namespace: argo-demo
+spec:
+  replicas: 5
+  revisionHistoryLimit: 2
+  selector:
+    matchLabels:
+      app: argo-demo
+  template:
+    metadata:
+      labels:
+        app: argo-demo
+    spec:
+      containers:
+      - name: argo-demo
+        image: argoproj/rollouts-demo:green
+        ports:
+        - name: http
+          containerPort: 8080
+          protocol: TCP
+        resources:
+          requests:
+            memory: 32Mi
+            cpu: 5m

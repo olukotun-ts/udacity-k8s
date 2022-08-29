@@ -1,0 +1,24 @@
+apiVersion: networking.istio.io/v1alpha3
+kind: VirtualService
+metadata:
+  name: argo-demo
+  namespace: argo-demo
+spec:
+  gateways:
+  - istio-ingress/default-gateway
+  hosts:
+  - argo-demo.olukotun.demo-app-circleci.com
+  http:
+  - name: color
+    match:
+    - uri:
+        exact: /metrics
+    rewrite:
+      uri: /color
+    route:
+    - destination:
+        host: argo-demo
+  - name: default
+    route:
+    - destination:
+        host: argo-demo

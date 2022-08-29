@@ -1,0 +1,28 @@
+apiVersion: networking.istio.io/v1alpha3
+kind: VirtualService
+metadata:
+  name: bookinfo
+  namespace: bookinfo
+spec:
+  hosts:
+  - bookinfo.olukotun.demo-app-circleci.com
+  gateways:
+  - istio-ingress/default-gateway
+  http:
+  - name: metrics
+    match:
+    - uri:
+        exact: /metrics
+    rewrite:
+      uri: /health
+    route:
+    - destination:
+        host: productpage
+        port:
+          number: 9080
+  - name: default
+    route:
+    - destination:
+        host: productpage
+        port:
+          number: 9080

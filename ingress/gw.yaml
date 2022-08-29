@@ -1,0 +1,16 @@
+apiVersion: networking.istio.io/v1alpha3
+kind: Gateway
+metadata:
+  name: default-gateway
+  namespace: istio-ingress
+spec:
+  selector:
+    istio: ingressgateway # use istio default controller
+  servers:
+  - port:
+      number: 80
+      name: http
+      protocol: HTTP
+    hosts:
+    - argo-demo.olukotun.demo-app-circleci.com
+    - bookinfo.olukotun.demo-app-circleci.com
