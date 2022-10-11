@@ -4,10 +4,10 @@ metadata:
   name: bookinfo
   namespace: bookinfo
 spec:
-  hosts:
-  - bookinfo.olukotun.demo-app-circleci.com
   gateways:
   - istio-ingress/default-gateway
+  hosts:
+  - bookinfo.olukotun.demo-app-circleci.com
   http:
   - name: metrics
     match:

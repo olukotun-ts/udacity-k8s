@@ -9,7 +9,7 @@ spec:
   hosts:
   - argo-demo.olukotun.demo-app-circleci.com
   http:
-  - name: color
+  - name: metrics
     match:
     - uri:
         exact: /metrics
